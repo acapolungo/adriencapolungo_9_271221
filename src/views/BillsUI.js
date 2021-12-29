@@ -20,11 +20,22 @@ const row = (bill) => {
   }
 
 const rows = (data) => {
+  // data[0].date = '7 Dec. 21'
+  // data[1].date = '8 Dec. 21'
+  // data[2].date = '9 Dec. 21'
+  if (data && data.length) {
+    data.sort(function (a, b) {
+      // console.log(b.date)
+      // console.log(a.date)
+      // console.log(new Date (a.date))
+      // console.log(new Date (b.date))
+      return new Date(b.date) - new Date(a.date);
+    });
+  }
   return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
 }
 
 export default ({ data: bills, loading, error }) => {
-  
   const modal = () => (`
     <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">

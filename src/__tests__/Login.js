@@ -1,3 +1,13 @@
+/**
+ * @jest-environment jsdom
+ */
+
+import {
+  getByTestId
+} from '@testing-library/dom'
+
+import '@testing-library/jest-dom'
+
 import LoginUI from "../views/LoginUI";
 import Login from "../containers/Login.js";
 import { ROUTES } from "../constants/routes";
@@ -5,7 +15,7 @@ import { fireEvent, screen } from "@testing-library/dom";
 
 describe("Given that I am a user on login page", () => {
   describe("When I do not fill fields and I click on employee button Login In", () => {
-    test("Then It should renders Login page", () => {
+    it("Then It should renders Login page", () => {
       document.body.innerHTML = LoginUI();
 
       const inputEmailUser = screen.getByTestId("employee-email-input");

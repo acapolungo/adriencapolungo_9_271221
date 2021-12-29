@@ -1,3 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
+
+ import '@testing-library/jest-dom'
+
 import { screen } from "@testing-library/dom"
 import NewBillUI from "../views/NewBillUI.js"
 import NewBill from "../containers/NewBill.js"
