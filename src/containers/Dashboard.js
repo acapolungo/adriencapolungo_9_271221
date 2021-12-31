@@ -147,9 +147,7 @@ export default class {
     bills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
-
     return bills
-
   }
 
   // not need to cover this function by tests

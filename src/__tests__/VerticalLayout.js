@@ -12,6 +12,7 @@ describe('Given I am connected as Employee', () => {
     window.localStorage.setItem('user', user)
     const html = VerticalLayout(120)
     document.body.innerHTML = html
+    //console.log(html)
     expect(screen.getByTestId('icon-window')).toBeTruthy()
     expect(screen.getByTestId('icon-mail')).toBeTruthy()
   })

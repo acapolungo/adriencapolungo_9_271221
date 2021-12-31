@@ -20,7 +20,7 @@ export default class NewBill {
     e.preventDefault()
     const errorMsg = document.querySelector('.file__error');
     errorMsg.classList.remove('file__error--on');
-    console.log(errorMsg)
+    //console.log(errorMsg)
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length - 1]
@@ -38,11 +38,11 @@ export default class NewBill {
             noContentType: true
           }
         })
-        .then(({ fileUrl, key }) => {
-          console.log(fileUrl)
-          //console.log(key)
+        //.then(data => console.log(data))
+        .then(({ filePath, key }) => {
           this.billId = key
-          this.fileUrl = fileUrl
+          this.fileUrl = null
+          console.log(filePath)
           this.fileName = fileName
         }).catch(error => console.error(error))
     } else {
@@ -67,6 +67,7 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
+    console.log(bill)
     this.updateBill(bill)
     this.onNavigate(ROUTES_PATH['Bills'])
   }

@@ -29,6 +29,7 @@ export default class {
 
   // not need to cover this function by tests
   getBills = () => {
+    //console.log(this.store.bills().list())
     if (this.store) {
       return this.store
       .bills()
