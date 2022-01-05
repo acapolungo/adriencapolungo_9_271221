@@ -40,41 +40,39 @@ describe("Given I am connected as an employee", () => {
 });
 
 describe('When I select a file through the file input', () => {
-  test("Then the file name should be found in the input", () => {  
-    // we have to mock navigation to test it
-    const onNavigate = (pathname) => {
-      document.body.innerHTML = ROUTES({ pathname });
-    };
-    
-    Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-    window.localStorage.setItem('user', JSON.stringify({
-      type: "Employee",
-      email: "yoann@bdl.com",
-      password: "azerty",
-      status: "connected",
-    }))
-    
-    // build user interface
-    const html = NewBillUI();
-    document.body.innerHTML = html;
+  describe('When I am on the NewBill ', () => {
+    test("Then the file name should be found in the input", () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
 
-    // Init NewBills
-    const contentNewBill = new NewBill({
-      document, onNavigate, store: null, localStorage: window.localStorage
-    })
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
 
-    //Mock function handleChangeFile
-    const handleChangeFile = jest.fn(() => contentNewBill.handleChangeFile);
+      // build user interface
+      const html = NewBillUI();
+      document.body.innerHTML = html;
 
-    console.log(prettyDOM(document, 20000));
-    const inputFile = screen.getByTestId('file');
-    inputFile.addEventListener('change', handleChangeFile);
+      // Init NewBills
+      const contentNewBill = new NewBill({
+        document, onNavigate, store: null, localStorage: window.localStorage
+      })
 
-    fireEvent.change(inputFile, {
-      target: {
-        files: [new File(["image"], "image.", { type: "image/jpg" })],
-      },
+      //Mock function handleChangeFile
+      const handleChangeFile = jest.fn(contentNewBill.handleChangeFile);
+
+      //console.log(prettyDOM(document, 20000));
+      const inputFile = screen.getByTestId('file');
+      inputFile.addEventListener('change', handleChangeFile);
+
+      fireEvent.change(inputFile, {
+        target: {
+          files: [new File(["image"], "image.jpg", { type: "image/jpg" })],
+        },
+      })
+      expect(handleChangeFile).toBeCalled();
     });
-    expect(handleChangeFile).toBeCalled();
-  });
+  })
 });
