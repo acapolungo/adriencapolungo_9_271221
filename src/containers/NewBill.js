@@ -38,15 +38,15 @@ export default class NewBill {
             noContentType: true
           }
         })
-        //.then(data => console.log(data))
-        .then(({ filePath, key }) => {
+        .then(({ fileUrl, key }) => {
+          //console.log(fileUrl)
           this.billId = key
-          this.fileUrl = null
-          //console.log(filePath)
+          this.fileUrl = fileUrl
           this.fileName = fileName
         }).catch(error => console.error(error))
     } else {
       errorMsg.classList.add('file__error--on');
+      //this.fileName = "invalid"
     }
   }
 

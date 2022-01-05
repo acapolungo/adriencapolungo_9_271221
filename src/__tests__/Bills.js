@@ -27,6 +27,7 @@ describe("Given I am connected as an employee", () => {
 
       // Routing variable
       // const pathname = ROUTES_PATH['Bills']
+
       window.location.assign(ROUTES_PATH['Bills']);
       document.body.innerHTML = `<div id="root"></div>`;
 
@@ -76,8 +77,9 @@ describe('When I click on new bill button', () => {
 
     // Mock handleClickNewBill
     const handleClickNewBill = jest.fn((e) => contentBill.handleClickNewBill(e)); 
-    const btnNewBill = screen.getByTestId('btn-new-bill');
+    
     // Add event
+    const btnNewBill = screen.getByTestId('btn-new-bill');
     btnNewBill.addEventListener('click', handleClickNewBill);
     userEvent.click(btnNewBill)
 
