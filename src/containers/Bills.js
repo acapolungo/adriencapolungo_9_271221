@@ -26,7 +26,8 @@ export default class {
     $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} /></div>`)
     $('#modaleFile').modal('show')
   }
-
+  
+  /* istanbul ignore next */
   // not need to cover this function by tests
   getBills = () => {
     //console.log(this.store.bills().list())
@@ -37,7 +38,6 @@ export default class {
       .then(snapshot => {
         const bills = snapshot
           .map(doc => {
-            //console.log(doc)
             try {
               return {
                 ...doc,

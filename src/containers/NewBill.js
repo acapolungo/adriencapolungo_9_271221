@@ -42,7 +42,7 @@ export default class NewBill {
         .then(({ filePath, key }) => {
           this.billId = key
           this.fileUrl = null
-          console.log(filePath)
+          //console.log(filePath)
           this.fileName = fileName
         }).catch(error => console.error(error))
     } else {
@@ -73,6 +73,7 @@ export default class NewBill {
   }
 
   // not need to cover this function by tests
+  /* istanbul ignore next */
   updateBill = (bill) => {
     if (this.store) {
       this.store

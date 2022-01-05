@@ -1,9 +1,13 @@
 import VerticalLayout from './VerticalLayout.js'
 import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
+import { formatDate } from "../app/format.js"
 
 import Actions from './Actions.js'
 
+// Modif
+// formatage uniquement à l'affichage
+// <td>${formatDate(bill.date)}</td>
 const row = (bill) => {
   return (`
     <tr>
@@ -17,22 +21,11 @@ const row = (bill) => {
       </td>
     </tr>
     `)
-  }
+}
 
 const rows = (data) => {
-  // data[0].date = '7 Dec. 21'
-  // data[1].date = '8 Dec. 21'
-  // data[2].date = '9 Dec. 21'
-  if (data && data.length) {
-    data.sort(function (a, b) {
-      // console.log(b.date)
-      // console.log(a.date)
-      // console.log(new Date (a.date))
-      // console.log(new Date (b.date))
-      return new Date(b.date) - new Date(a.date);
-    });
-  }
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  return (data && data.length) ? 
+  data.sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1)).map(bill => row(bill)).join("") : ""
 }
 
 export default ({ data: bills, loading, error }) => {
@@ -58,7 +51,7 @@ export default ({ data: bills, loading, error }) => {
   } else if (error) {
     return ErrorPage(error)
   }
-  
+
   return (`
     <div class='layout'>
       ${VerticalLayout(120)}

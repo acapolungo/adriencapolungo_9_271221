@@ -7,6 +7,7 @@ import { ROUTES } from "../constants/routes"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import store from "../__mocks__/store"
 import { bills } from "../fixtures/bills"
+import { prettyDOM } from "@testing-library/dom";
 
 
 describe('Given I am connected as an Admin', () => {
@@ -193,6 +194,7 @@ describe('Given I am connected as Admin and I am on Dashboard page and I clicked
 
       const handleClickIconEye = jest.fn(dashboard.handleClickIconEye)
       const eye = screen.getByTestId('icon-eye-d')
+      
       eye.addEventListener('click', handleClickIconEye)
       userEvent.click(eye)
       expect(handleClickIconEye).toHaveBeenCalled()
