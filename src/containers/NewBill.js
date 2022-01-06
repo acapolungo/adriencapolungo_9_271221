@@ -30,7 +30,7 @@ export default class NewBill {
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)
       formData.append('email', email)
-      this.store
+      if(this.store) this.store
         .bills()
         .create({
           data: formData,
@@ -46,7 +46,7 @@ export default class NewBill {
         }).catch(error => console.error(error))
     } else {
       errorMsg.classList.add('file__error--on');
-      //this.fileName = "invalid"
+      this.fileName = "invalid"
     }
   }
 

@@ -40,39 +40,97 @@ describe("Given I am connected as an employee", () => {
 });
 
 describe('When I select a file through the file input', () => {
+  let newcontentBill;
+  beforeAll(() => {
+    const html = NewBillUI()
+    document.body.innerHTML = html;
+
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname });
+    };
+
+    Object.defineProperty(window, "localStorage", { value: localStorageMock });
+
+    window.localStorage.setItem(
+      "user",
+      JSON.stringify({
+        type: "Employee",
+        email: "yoann@bdl.com",
+        password: "azerty",
+        status: "connected",
+      })
+    );
+
+    // build user interface before
+    newcontentBill = new NewBill({ document, onNavigate, store: null, localStorage });
+  });
+
   describe('When I am on the NewBill ', () => {
     test("Then the file name should be found in the input", () => {
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-      window.localStorage.setItem('user', JSON.stringify({
-        type: 'Employee'
-      }))
+      // Mock function handleChangeFile
+      const handleChangeFile = jest.fn(newcontentBill.handleChangeFile);
 
-      const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname })
-      }
-
-      // build user interface
-      const html = NewBillUI();
-      document.body.innerHTML = html;
-
-      // Init NewBills
-      const contentNewBill = new NewBill({
-        document, onNavigate, store: null, localStorage: window.localStorage
-      })
-
-      //Mock function handleChangeFile
-      const handleChangeFile = jest.fn(contentNewBill.handleChangeFile);
-
-      //console.log(prettyDOM(document, 20000));
+      // console.log(prettyDOM(document, 20000));
       const inputFile = screen.getByTestId('file');
       inputFile.addEventListener('change', handleChangeFile);
 
       fireEvent.change(inputFile, {
         target: {
-          files: [new File(["image"], "image.jpg", { type: "image/jpg" })],
+          files: [new File(["bill-image"], "bill-image.jpg", { type: "image/jpg" })],
         },
       })
       expect(handleChangeFile).toBeCalled();
+      expect(inputFile.files[0].name).toBe("bill-image.jpg");
+    });
+  })
+
+  describe('When I am on the NewBill ', () => {
+    test("Then the wrong file type should return an error msg", () => {
+      // Mock function handleChangeFile
+      const handleChangeFile = jest.fn(newcontentBill.handleChangeFile);
+
+      // console.log(prettyDOM(document, 20000));
+      const inputFile = screen.getByTestId('file');
+      inputFile.addEventListener('change', handleChangeFile);
+
+      fireEvent.change(inputFile, {
+        target: {
+          files: [new File(["bill-image"], "bill-image.pdf", { type: "image/pdf" })],
+        },
+      })
+      // HTML must contain 'hideErrorMessage'
+      expect(screen.getByTestId("file-error")).toHaveClass('file__error--on');
+    });
+  })
+
+  describe('When I am on the NewBill ', () => {
+    test("Then it should create a new bill", () => {
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+
+      // Build user interface
+      const html = NewBillUI();
+      document.body.innerHTML = html;
+
+      // Init newBill
+      const newcontentBill = new NewBill({
+        document,
+        onNavigate,
+        store: null,
+        localStorage: window.localStorage,
+      });
+
+      // mock of handleSubmit
+      const handleSubmit = jest.fn(newcontentBill.handleSubmit);
+
+      // get the form and addEvent Submit
+      const btnSubmit = screen.getByTestId('form-new-bill');
+      btnSubmit.addEventListener('submit', handleSubmit);
+      fireEvent.submit(btnSubmit);
+
+      // handleSubmit function must be called
+      expect(handleSubmit).toHaveBeenCalled();
     });
   })
 });
