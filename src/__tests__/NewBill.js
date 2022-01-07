@@ -17,6 +17,20 @@ import Router from "../app/Router";
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import store from "../__mocks__/store"
 
+const newBill = {
+  email: 'test@email.com',
+  type: 'Flight',
+  name:  'JohnDoe',
+  amount: 10,
+  date: '07/07/2077',
+  vat: 5.5,
+  pct: 10,
+  commentary: 'mon commentaire',
+  fileUrl: 'https://fr.wikipedia.org/wiki/Fichier:Google_%22G%22_Logo.svg',
+  fileName: 'Logo de google',
+  status: 'pending'
+}
+
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
     test("Then the modal must display the image", async () => {
@@ -99,6 +113,7 @@ describe('When I select a file through the file input', () => {
         },
       })
       // HTML must contain 'hideErrorMessage'
+      expect(inputFile.files[0].name).toBe("bill-image.pdf");
       expect(screen.getByTestId("file-error")).toHaveClass('file__error--on');
     });
   })
@@ -134,3 +149,31 @@ describe('When I select a file through the file input', () => {
     });
   })
 });
+
+// test d'intégration POST
+describe("Given I am a user connected as Employee", () => {
+  describe("When I navigate to Dashboard employee", () => {
+    test("Then fetches bills from mock API POST", async () => {
+      const postSpy = jest.spyOn(store, "post")
+      const bills = await store.post(newBill)
+      expect(postSpy).toHaveBeenCalledTimes(1)
+      expect(bills.data.length).toBe(1)
+    })
+    test("add bill to API and fails with 404 message error", async () => {
+      store.post.mockImplementationOnce(() =>
+        Promise.reject(new Error("Erreur 404")))
+      const html = BillsUI({ error: "Erreur 404" })
+      document.body.innerHTML = html;
+      const message = await screen.getByText(/Erreur 404/)
+      expect(message).toBeTruthy();
+    })
+    test("add bill to API and fails with 500 message error", async () => {
+      store.post.mockImplementationOnce(() =>
+        Promise.reject(new Error("Erreur 500")))
+      const html = BillsUI({ error: "Erreur 500" })
+      document.body.innerHTML = html
+      const message = await screen.getByText(/Erreur 500/)
+      expect(message).toBeTruthy()
+    });
+  })
+})

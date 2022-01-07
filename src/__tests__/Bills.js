@@ -17,6 +17,8 @@ import Router from "../app/Router";
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import store from "../__mocks__/store"
 
+import { filteredByDate } from '../views/BillsUI.js'
+
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
@@ -41,14 +43,15 @@ describe("Given I am connected as an employee", () => {
 
     test("Then bills should be ordered from earliest to latest", () => {
       // construct user interface
-      const html = BillsUI({ data: bills });
+      const html = BillsUI({ data: filteredByDate(bills) });
       document.body.innerHTML = html;
       //console.log(html)
       //Get text from HTML
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML);
-      //console.log(dates)
+      console.log(dates)
       const antiChrono = (a, b) => ((a < b) ? 1 : -1);
       const datesSorted = [...dates].sort(antiChrono);
+      console.log(datesSorted)
       // dates must be equal to datesSorted
       expect(dates).toEqual(datesSorted);
     })
@@ -76,7 +79,7 @@ describe('When I click on new bill button', () => {
     })
 
     // Mock handleClickNewBill
-    const handleClickNewBill = jest.fn((e) => contentBill.handleClickNewBill(e)); 
+    const handleClickNewBill = jest.fn(() => contentBill.handleClickNewBill); 
     
     // Add event
     const btnNewBill = screen.getByTestId('btn-new-bill');
@@ -122,9 +125,45 @@ describe('When I click on eye icon', () => {
 
     // handleClickIconEye function must be called
     expect(handleClickIconEye).toHaveBeenCalled()
+    
+    const modale = document.getElementById('modaleFile')
+    expect(modale).toBeTruthy()
+  })
+  test("Then modal contain an image", () => {
+    const html = BillsUI({ data: bills })
+    document.body.innerHTML = html
+
+    const contentBill = new Bills({ document, onNavigate, store: null, bills, localStorage: localStorageMock })          
+    
+    // Mock modal comportment
+    $.fn.modal = jest.fn();
+
+    // Get button eye in DOM
+    const eye = screen.getAllByTestId('icon-eye')[0];
+    const handleClickIconEye = jest.fn(() => contentBill.handleClickIconEye(eye));
+
+    // Add event and click
+    eye.addEventListener('click', handleClickIconEye)
+    userEvent.click(eye)
     //console.log(prettyDOM(document, 20000));
     const modale = document.getElementById('modaleFile')
     expect(modale).toBeTruthy()
+  })
+})
+
+describe('When I am on Bills page but it is loading', () => {
+  test('Then, Loading page should be rendered', () => {
+    const html = BillsUI({ loading: true })
+    document.body.innerHTML = html
+    expect(screen.getAllByText('Loading...')).toBeTruthy()
+  })
+})
+
+describe('When I am on Bills page but back-end send an error message', () => {
+  test('Then, Error page should be rendered', () => {
+    const html = BillsUI({ error: 'some error message' })
+    document.body.innerHTML = html
+    expect(screen.getAllByText('Erreur')).toBeTruthy()
   })
 })
 
