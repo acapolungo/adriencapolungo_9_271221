@@ -75,8 +75,10 @@ describe('When I select a file through the file input', () => {
       })
     );
 
+    //const store = jest.fn();
+
     // build user interface before
-    newcontentBill = new NewBill({ document, onNavigate, store: null, localStorage });
+    newcontentBill = new NewBill({ document, onNavigate, store : null, localStorage });
   });
 
   describe('When I am on the NewBill ', () => {
@@ -84,7 +86,7 @@ describe('When I select a file through the file input', () => {
       // Mock function handleChangeFile
       const handleChangeFile = jest.fn(newcontentBill.handleChangeFile);
 
-      // console.log(prettyDOM(document, 20000));
+      console.log(prettyDOM(document, 20000));
       const inputFile = screen.getByTestId('file');
       inputFile.addEventListener('change', handleChangeFile);
 
@@ -107,6 +109,13 @@ describe('When I select a file through the file input', () => {
       const inputFile = screen.getByTestId('file');
       inputFile.addEventListener('change', handleChangeFile);
 
+      fireEvent.change(screen.getByTestId('expense-type'), {target: {value: 'Transports'}});
+      fireEvent.change(screen.getByTestId('expense-name'), {target: {value: 'Test de bills mock'}});
+      fireEvent.change(screen.getByTestId('datepicker'), {target: {value: '2022-03-06'}});
+      fireEvent.change(screen.getByTestId('amount'), {target: {value: '299'}});
+      fireEvent.change(screen.getByTestId('vat'), {target: {value: '50'}});
+      fireEvent.change(screen.getByTestId('pct'), {target: {value: '30'}});
+      
       fireEvent.change(inputFile, {
         target: {
           files: [new File(["bill-image"], "bill-image.pdf", { type: "image/pdf" })],
@@ -119,7 +128,7 @@ describe('When I select a file through the file input', () => {
   })
 
   describe('When I am on the NewBill ', () => {
-    test("Then it should create a new bill", () => {
+    test("Then it should create a new bill, the new bills should be submitted and redirect to bills page", () => {
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname });
       };
@@ -136,6 +145,9 @@ describe('When I select a file through the file input', () => {
         localStorage: window.localStorage,
       });
 
+      // Test we are on the new bill page
+      expect(screen.getAllByText('Envoyer une note de frais')).toBeTruthy()
+
       // mock of handleSubmit
       const handleSubmit = jest.fn(newcontentBill.handleSubmit);
 
@@ -146,6 +158,9 @@ describe('When I select a file through the file input', () => {
 
       // handleSubmit function must be called
       expect(handleSubmit).toHaveBeenCalled();
+
+      // confirm we are back to the bill's page
+      expect(screen.getAllByText('Mes notes de frais')).toBeTruthy()
     });
   })
 });

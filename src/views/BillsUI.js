@@ -3,16 +3,14 @@ import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
 
 import Actions from './Actions.js'
+import { formatDate } from '../app/format.js'
 
-// Modif
-// formatage uniquement à l'affichage
-// <td>${formatDate(bill.date)}</td>
 const row = (bill) => {
   return (`
-    <tr>
+    <tr data-testid='bill'>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td data-testid='date'>${formatDate(bill.date)}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -27,8 +25,9 @@ export const filteredByDate = (data) => {
 }
 
 const rows = (data) => {
-  return (data && data.length) ?
-  data.map(bill => row(bill)).join("") : ""
+  return data && data.length ?
+  filteredByDate(data).map(bill => row(bill)).join("") : "";
+  //data.map(bill => row(bill)).join("") : ""
   //data.sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1)).map(bill => row(bill)).join("") : ""
 }
 

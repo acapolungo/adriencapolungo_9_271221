@@ -143,14 +143,18 @@ export default class {
         .html("")
       this.counter ++
     }
-    // handle Edit tickets
-    bills.forEach(bill => {
+    // Get bills by status
+    const currentFilteredBills = filteredBills(bills, getStatus(this.index));
+    //console.log(currentFilteredBills)
+    // handle Edit tickets on this bills
+    currentFilteredBills.forEach(bill => {
       $(`#open-bill${bill.id}`).off("click");
       $(`#open-bill${bill.id}`).on("click", (e) => this.handleEditTicket(e, bill, bills));
     })
     return bills
   }
 
+  /* istanbul ignore next */
   // not need to cover this function by tests
   getBillsAllUsers = () => {
     if (this.store) {
@@ -171,6 +175,7 @@ export default class {
     }
   }
     
+  /* istanbul ignore next */
   // not need to cover this function by tests
   updateBill = (bill) => {
     if (this.store) {

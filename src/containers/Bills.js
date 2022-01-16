@@ -1,7 +1,6 @@
 import { ROUTES_PATH } from '../constants/routes.js'
-import { formatDate, formatStatus } from "../app/format.js"
+import { formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
-import { filteredByDate } from '../views/BillsUI.js'
 
 export default class {
   constructor({ document, onNavigate, store, localStorage }) {
@@ -11,6 +10,7 @@ export default class {
     const buttonNewBill = document.querySelector(`button[data-testid="btn-new-bill"]`)
     if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
     const iconEye = document.querySelectorAll(`div[data-testid="icon-eye"]`)
+    /* istanbul ignore next */
     if (iconEye) iconEye.forEach(icon => {
       icon.addEventListener('click', (e) => this.handleClickIconEye(icon))
     })
@@ -31,19 +31,19 @@ export default class {
   /* istanbul ignore next */
   // not need to cover this function by tests
   getBills = () => {
-    //console.log(this.store.bills().list())
     if (this.store) {
       return this.store
       .bills()
       .list()
       .then(snapshot => {
-        const bills = filteredByDate(snapshot)
-        //const bills = snapshot
+        const bills = snapshot
           .map(doc => {
             try {
               return {
                 ...doc,
-                date: formatDate(doc.date),
+                date: doc.date,
+                // Bug report
+                // date: formatDate(doc.date),
                 status: formatStatus(doc.status)
               }
             } catch(e) {

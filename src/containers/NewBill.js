@@ -31,8 +31,10 @@ export default class NewBill {
       formData.append('file', file)
       formData.append('email', email)
 
+      // not need to cover this function by tests
       /* istanbul ignore next */
-      if(this.store) this.store
+      if(this.store)
+      this.store
         .bills()
         .create({
           data: formData,
@@ -69,7 +71,7 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
-    console.log(bill)
+    //console.log(bill)
     this.updateBill(bill)
     this.onNavigate(ROUTES_PATH['Bills'])
   }
