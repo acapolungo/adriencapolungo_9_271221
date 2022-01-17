@@ -6,7 +6,6 @@ import '@testing-library/jest-dom'
 import { prettyDOM } from "@testing-library/dom";
 
 import { fireEvent, screen } from "@testing-library/dom";
-import userEvent from '@testing-library/user-event'
 
 import BillsUI from "../views/BillsUI.js"
 import NewBillUI from "../views/NewBillUI.js";
@@ -46,7 +45,6 @@ describe("Given I am connected as an employee", () => {
       // Router init to get actives CSS classes
       await Router();
 
-      //console.log(document.body.innerHTML)
       // "icon-mail" must contain the class "active-icon"
       expect(screen.getByTestId("icon-mail")).toHaveClass('active-icon');
     })
@@ -75,18 +73,15 @@ describe('When I select a file through the file input', () => {
       })
     );
 
-    //const store = jest.fn();
-
     // build user interface before
     newcontentBill = new NewBill({ document, onNavigate, store : null, localStorage });
   });
 
   describe('When I am on the NewBill ', () => {
     test("Then the file name should be found in the input", () => {
-      // Mock function handleChangeFile
+      // Simulate function handleChangeFile in instance
       const handleChangeFile = jest.fn(newcontentBill.handleChangeFile);
 
-      console.log(prettyDOM(document, 20000));
       const inputFile = screen.getByTestId('file');
       inputFile.addEventListener('change', handleChangeFile);
 
@@ -102,10 +97,10 @@ describe('When I select a file through the file input', () => {
 
   describe('When I am on the NewBill ', () => {
     test("Then the wrong file type should return an error msg", () => {
-      // Mock function handleChangeFile
+      // Simulate function handleChangeFile in instance
       const handleChangeFile = jest.fn(newcontentBill.handleChangeFile);
 
-      // console.log(prettyDOM(document, 20000));
+
       const inputFile = screen.getByTestId('file');
       inputFile.addEventListener('change', handleChangeFile);
 

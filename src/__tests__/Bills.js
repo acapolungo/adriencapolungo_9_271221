@@ -18,10 +18,6 @@ import { localStorageMock } from "../__mocks__/localStorage.js"
 import store from "../__mocks__/store"
 import { formatDate } from "../app/format.js"
 
-global.console = {
-  log: jest.fn(),
-}
-
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     // construct DOM interface
@@ -119,10 +115,10 @@ describe('When I click on eye icon', () => {
       document, onNavigate, store: null, localStorage: window.localStorage
     });
 
-    // Mock modal comportment
+    // Mock modal comportment in BillsUi
     $.fn.modal = jest.fn();
 
-    // Get button eye in DOM
+    // Get one button eye in DOM
     const eye = screen.getAllByTestId('icon-eye')[0];
     const handleClickIconEye = jest.fn((e) => contentBill.handleClickIconEye(eye)); 
 

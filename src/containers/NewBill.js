@@ -50,7 +50,7 @@ export default class NewBill {
         }).catch(error => console.error(error))
     } else {
       errorMsg.classList.add('file__error--on');
-      this.fileName = "invalid"
+      this.document.querySelector(`input[data-testid='file']`).value = null;
     }
   }
 
