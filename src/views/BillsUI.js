@@ -3,13 +3,14 @@ import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
 
 import Actions from './Actions.js'
+import { formatDate } from '../app/format.js'
 
 const row = (bill) => {
   return (`
-    <tr>
+    <tr data-testid='bill'>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td data-testid='date'>${formatDate(bill.date)}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -17,22 +18,17 @@ const row = (bill) => {
       </td>
     </tr>
     `)
-  }
+}
+
+export const filteredByDate = (data) => {
+  return data.sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1));
+}
 
 const rows = (data) => {
-  // data[0].date = '7 Dec. 21'
-  // data[1].date = '8 Dec. 21'
-  // data[2].date = '9 Dec. 21'
-  if (data && data.length) {
-    data.sort(function (a, b) {
-      // console.log(b.date)
-      // console.log(a.date)
-      // console.log(new Date (a.date))
-      // console.log(new Date (b.date))
-      return new Date(b.date) - new Date(a.date);
-    });
-  }
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  return data && data.length ?
+  filteredByDate(data).map(bill => row(bill)).join("") : "";
+  //data.map(bill => row(bill)).join("") : ""
+  //data.sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1)).map(bill => row(bill)).join("") : ""
 }
 
 export default ({ data: bills, loading, error }) => {
@@ -58,7 +54,7 @@ export default ({ data: bills, loading, error }) => {
   } else if (error) {
     return ErrorPage(error)
   }
-  
+
   return (`
     <div class='layout'>
       ${VerticalLayout(120)}

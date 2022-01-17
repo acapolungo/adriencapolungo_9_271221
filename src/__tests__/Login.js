@@ -2,10 +2,6 @@
  * @jest-environment jsdom
  */
 
-import {
-  getByTestId
-} from '@testing-library/dom'
-
 import '@testing-library/jest-dom'
 
 import LoginUI from "../views/LoginUI";

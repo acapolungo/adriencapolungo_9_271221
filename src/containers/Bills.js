@@ -1,5 +1,5 @@
 import { ROUTES_PATH } from '../constants/routes.js'
-import { formatDate, formatStatus } from "../app/format.js"
+import { formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
 
 export default class {
@@ -10,6 +10,7 @@ export default class {
     const buttonNewBill = document.querySelector(`button[data-testid="btn-new-bill"]`)
     if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
     const iconEye = document.querySelectorAll(`div[data-testid="icon-eye"]`)
+    /* istanbul ignore next */
     if (iconEye) iconEye.forEach(icon => {
       icon.addEventListener('click', (e) => this.handleClickIconEye(icon))
     })
@@ -26,7 +27,8 @@ export default class {
     $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} /></div>`)
     $('#modaleFile').modal('show')
   }
-
+  
+  /* istanbul ignore next */
   // not need to cover this function by tests
   getBills = () => {
     if (this.store) {
@@ -36,11 +38,12 @@ export default class {
       .then(snapshot => {
         const bills = snapshot
           .map(doc => {
-            //console.log(doc)
             try {
               return {
                 ...doc,
-                date: formatDate(doc.date),
+                date: doc.date,
+                // Bug report
+                // date: formatDate(doc.date),
                 status: formatStatus(doc.status)
               }
             } catch(e) {

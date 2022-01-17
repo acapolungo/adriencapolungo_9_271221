@@ -94,7 +94,7 @@ export default class {
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
-      this.counter ++
+      this.counter ++;
     } else {
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
@@ -136,22 +136,25 @@ export default class {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
       $(`#status-bills-container${this.index}`)
         .html(cards(filteredBills(bills, getStatus(this.index))))
-      this.counter ++
+      this.counter ++;
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
       $(`#status-bills-container${this.index}`)
         .html("")
       this.counter ++
     }
-
-    bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+    // Get bills by status
+    const currentFilteredBills = filteredBills(bills, getStatus(this.index));
+    //console.log(currentFilteredBills)
+    // handle Edit tickets on this bills
+    currentFilteredBills.forEach(bill => {
+      $(`#open-bill${bill.id}`).off("click");
+      $(`#open-bill${bill.id}`).on("click", (e) => this.handleEditTicket(e, bill, bills));
     })
-
     return bills
-
   }
 
+  /* istanbul ignore next */
   // not need to cover this function by tests
   getBillsAllUsers = () => {
     if (this.store) {
@@ -172,6 +175,7 @@ export default class {
     }
   }
     
+  /* istanbul ignore next */
   // not need to cover this function by tests
   updateBill = (bill) => {
     if (this.store) {
